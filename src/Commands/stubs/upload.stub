@@ -1,0 +1,40 @@
+<?php
+
+namespace DummyNamespace;
+
+use OrckidLab\VueTable\Process\Upload;
+
+/**
+ * Class DummyClass
+ * @package App\VueTables\Uploads
+ */
+class DummyClass extends Upload
+{
+	/**
+	 * Validation rules for row.
+	 *
+	 * @param $row
+	 * @return array
+	 */
+	public function rules($row)
+	{
+		return [
+			'title' => 'required',
+			'first_name' => 'required',
+			'last_name' => 'required',
+			'email' => 'required|unique:users',
+		];
+	}
+
+	/**
+	 * Logic to persist row into database.
+	 *
+	 * @param $row
+	 */
+	public function persist($row)
+	{
+		//$row['password'] = bcrypt(str_random(10));
+
+		//User::create($row);
+	}
+}

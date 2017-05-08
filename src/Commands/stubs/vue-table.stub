@@ -1,0 +1,59 @@
+<?php
+
+namespace DummyNamespace;
+
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
+use OrckidLab\VueTable\Builder\VueTable;
+
+/**
+ * Class DummyClass
+ * @package OrckidLab\VueTable
+ */
+class DummyClass extends VueTable
+{
+	/**
+	 * Define the table options.
+	 *
+	 * @return void
+	 */
+	public function build()
+	{
+		$this->addColumn('Id', 'id');
+		$this->addColumn('First Name', 'first_name');
+		$this->addColumn('Last Name', 'last_name');
+		$this->addColumn('Full Name', null, function ($model) {
+			return $model->first_name . ' ' . $model->last_name;
+		});
+
+		$this->title(function(){
+			return "List of Users ({$this->showing()}/{$this->total()})";
+		});
+
+		$this->when(!Auth::user(), function(){
+			//$this->disablePaging();
+		});
+	}
+
+	/**
+	 * Define the query from which data is retrieved.
+	 *
+	 * @return Builder
+	 */
+	public function query()
+	{
+		//return User::query()->orderBy('created_at', 'desc');
+	}
+
+	/**
+	 * Define the uploader class to handle uploading to the table.
+	 *
+	 * @return string
+	 */
+	public function uploadWith()
+	{
+		// run php artisan vue-table:upload UsersUploader
+		// implement Uploadable in the current class
+		// return UsersUpload::class;
+	}
+}
