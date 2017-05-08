@@ -31,7 +31,7 @@ class MakeVueTableUpload extends GeneratorCommand
 	 */
 	protected function getNamespace()
 	{
-		return $this->rootNamespace() . 'VueTables\Upload';
+		return $this->rootNamespace() . 'VueTables\Uploads';
 	}
 
 	/**
