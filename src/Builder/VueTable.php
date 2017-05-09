@@ -339,4 +339,11 @@ abstract class VueTable implements Arrayable, Jsonable, JsonSerializable
 	 * @return Builder
 	 */
 	abstract public function query();
+
+	/**
+	 * Define the logic to delete the table.
+	 *
+	 * @return boolean
+	 */
+	abstract public function destroy();
 }
