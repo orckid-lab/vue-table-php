@@ -3,9 +3,9 @@
 namespace OrckidLab\VueTable\Process;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use League\Csv\Reader;
+use OrckidLab\VueTable\VueTable;
 
 /**
  * Class Uploader
@@ -59,28 +59,17 @@ abstract class Upload
 	public $progress = 0;
 
 	/**
+	 * @var
+	 */
+	protected $chunk_size = 20;
+
+	/**
 	 * Upload constructor.
 	 * @param Request $request
 	 */
 	public function __construct(Request $request)
 	{
 		$this->request = $request;
-	}
-
-	/**
-	 * @return $this
-	 */
-	public function copyFile()
-	{
-		if(!$this->request->hasFile('import')){
-			$this->path .= '/' . $this->request->file_name . '.txt';
-
-			return $this;
-		}
-
-		$this->path = $this->request->file('import')->store($this->path);
-
-		return $this;
 	}
 
 	/**
@@ -98,29 +87,33 @@ abstract class Upload
 
 		$csv = $this->loadFile();
 
-		$chunk_size = 50;
+		$this->header = $csv->fetchOne();
 
-		$chunk_offset = $index * $chunk_size;
+		$validate = $this->validateHeader();
+
+		$validate->validate();
+
+		$chunk_offset = $index * $this->chunk_size;
 
 		$row_count = $this->request->has('total') ? $this->request->total : collect($csv->fetchAll())->count();
 
 		$csv->setOffset($chunk_offset);
 
 		foreach($csv->fetchAssoc() as $row_index => $row){
-			if($row_index === $chunk_offset + $chunk_size){
+			if($row_index === $chunk_offset + $this->chunk_size){
 				break;
 			}
 
 			$this->uploadRow($row, $row_index + $chunk_offset);
 		}
 
-		$segment_count = floor($row_count / $chunk_size);
+		$segment_count = floor($row_count / $this->chunk_size);
 
 		$this->progress = $segment_count ? floor(($index / $segment_count) * 100) : 100;
 
 		return array_merge([
 			'file_name' => $this->file_name,
-			'target' => $this->request->target,
+			'target' => $this->request->offsetGet('target'),
 			'total' => $row_count,
 			'is_last' => $index == $segment_count,
 			'next' => $index + 1,
@@ -132,6 +125,40 @@ abstract class Upload
 			],
 			'progress' => $this->progress,
 		]);
+	}
+
+	/**
+	 * @return mixed
+	 */
+	protected function validateHeader()
+	{
+		Validator::extend('csv_header', VueTable::getInstance()->uploadWith() . '@headerValidation', 'The header is invalid.');
+
+		return Validator::make([
+			'header' => $this->header
+		], [
+			'header' => 'required|array|csv_header'
+		]);
+	}
+
+	public function headerValidation($attribute, $value, $parameters, $validator){
+		return $this->header() == $value;
+	}
+
+	/**
+	 * @return $this
+	 */
+	public function copyFile()
+	{
+		if(!$this->request->hasFile('import')){
+			$this->path .= '/' . $this->request->file_name . '.txt';
+
+			return $this;
+		}
+
+		$this->path = $this->request->file('import')->store($this->path);
+
+		return $this;
 	}
 
 	/**
@@ -194,6 +221,13 @@ abstract class Upload
 	{
 		return Validator::make($row, $this->rules($row));
 	}
+
+	/**
+	 * Define the expected header in the CSV.
+	 *
+	 * @return array
+	 */
+	abstract public function header();
 
 	/**
 	 * Define the logic to persist the row into database.
