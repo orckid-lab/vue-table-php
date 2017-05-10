@@ -11,6 +11,24 @@ use OrckidLab\VueTable\Process\Upload;
 class DummyClass extends Upload
 {
 	/**
+	 * Define the expected header in the CSV.
+	 *
+	 * @return array
+	 */
+	public function header()
+	{
+		return [
+			'id',
+			'email',
+			'created_at',
+			'updated_at',
+			'title',
+			'first_name',
+			'last_name'
+		];
+	}
+
+	/**
 	 * Validation rules for row.
 	 *
 	 * @param $row
