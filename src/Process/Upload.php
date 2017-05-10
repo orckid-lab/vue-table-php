@@ -73,6 +73,8 @@ abstract class Upload
 	}
 
 	/**
+	 * Process the upload.
+	 *
 	 * @return array
 	 */
 	public function handle()
@@ -128,19 +130,14 @@ abstract class Upload
 	}
 
 	/**
-	 * @return mixed
+	 * The validation logic for the csv header.
+	 *
+	 * @param $attribute
+	 * @param $value
+	 * @param $parameters
+	 * @param $validator
+	 * @return bool
 	 */
-	protected function validateHeader()
-	{
-		Validator::extend('csv_header', VueTable::getInstance()->uploadWith() . '@headerValidation', 'The header is invalid.');
-
-		return Validator::make([
-			'header' => $this->header
-		], [
-			'header' => 'required|array|csv_header'
-		]);
-	}
-
 	public function headerValidation($attribute, $value, $parameters, $validator){
 		return $this->header() == $value;
 	}
@@ -186,6 +183,22 @@ abstract class Upload
 	}
 
 	/**
+	 * Handles validating the csv header.
+	 *
+	 * @return mixed
+	 */
+	private function validateHeader()
+	{
+		Validator::extend('csv_header', VueTable::getInstance()->uploadWith() . '@headerValidation', 'The header is invalid.');
+
+		return Validator::make([
+			'header' => $this->header
+		], [
+			'header' => 'required|array|csv_header'
+		]);
+	}
+
+	/**
 	 * Process the row.
 	 *
 	 * @param $index
@@ -193,7 +206,7 @@ abstract class Upload
 	 */
 	private function uploadRow($row, $index)
 	{
-		$validate = $this->validate($row);
+		$validate = $this->validateRow($row);
 
 		if($validate->fails()){
 			$this->failed[] = [
@@ -215,9 +228,9 @@ abstract class Upload
 	 * Validate the row.
 	 *
 	 * @param $row
-	 * @return mixed
+	 * @return Validator
 	 */
-	private function validate($row)
+	private function validateRow($row)
 	{
 		return Validator::make($row, $this->rules($row));
 	}
