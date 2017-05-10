@@ -30,6 +30,6 @@ class VueTableController extends Controller
 	 */
 	public function destroy()
 	{
-		return VueTable::getInstance()->destroy();
+		return VueTable::getInstance()->handleDestroy();
 	}
 }
