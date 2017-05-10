@@ -102,11 +102,11 @@ abstract class Upload
 		$csv->setOffset($chunk_offset);
 
 		foreach($csv->fetchAssoc() as $row_index => $row){
+			$this->uploadRow($row, $row_index + $chunk_offset);
+
 			if($row_index === $chunk_offset + $this->chunk_size){
 				break;
 			}
-
-			$this->uploadRow($row, $row_index + $chunk_offset);
 		}
 
 		$segment_count = floor($row_count / $this->chunk_size);
