@@ -121,27 +121,9 @@ abstract class VueTable implements Arrayable, Jsonable, JsonSerializable
 
 		$this->results = $this->query()->paginate($this->per_page, ['*'], 'page', $this->start_at);
 
-		foreach ($this->columns_maps as $column_map) {
-			$this->labels[] = $column_map['label'];
+		$this->generateLabels();
 
-			$this->columns[] = $column_map['column'];
-		}
-
-		foreach ($this->results as $model) {
-			$new_row = [];
-
-			foreach ($this->columns_maps as $column_map) {
-				if ($column_map['column']) {
-					$new_row[] = $model->{$column_map['column']};
-				}
-
-				if ($column_map['callback']) {
-					$new_row[] = call_user_func($column_map['callback'], $model);
-				}
-			}
-
-			$this->rows[] = $new_row;
-		}
+		$this->generateRows();
 
 		return $this;
 	}
@@ -205,6 +187,61 @@ abstract class VueTable implements Arrayable, Jsonable, JsonSerializable
 	}
 
 	/**
+	 * @return int
+	 */
+	protected function total()
+	{
+		return $this->results->total();
+	}
+
+	/**
+	 * @return string
+	 */
+	protected function currentPath(){
+		if($this->request->has('url')){
+			return $this->request->url;
+		}
+
+		return $this->request->fullUrl();
+	}
+
+	/**
+	 * Populate the labels array.
+	 *
+	 */
+	protected function generateLabels()
+	{
+		foreach ($this->columns_maps as $column_map) {
+			$this->labels[] = $column_map['label'];
+
+			$this->columns[] = $column_map['column'];
+		}
+	}
+
+	/**
+	 * Refactor the rows to map with the available labels.
+	 *
+	 */
+	protected function generateRows()
+	{
+		foreach ($this->results as $model) {
+			$new_row = [];
+
+			foreach ($this->columns_maps as $column_map) {
+				if ($column_map['column']) {
+					$new_row[] = $model->{$column_map['column']};
+				}
+
+				if ($column_map['callback']) {
+					$new_row[] = call_user_func($column_map['callback'], $model);
+				}
+			}
+
+			$this->rows[] = $new_row;
+		}
+	}
+
+	/**
 	 * @return $this
 	 */
 	public function disablePaging()
@@ -226,25 +263,6 @@ abstract class VueTable implements Arrayable, Jsonable, JsonSerializable
 		}
 
 		return $this;
-	}
-
-	/**
-	 * @return int
-	 */
-	protected function total()
-	{
-		return $this->results->total();
-	}
-
-	/**
-	 * @return string
-	 */
-	protected function currentPath(){
-		if($this->request->has('url')){
-			return $this->request->url;
-		}
-
-		return $this->request->fullUrl();
 	}
 
 	/**
