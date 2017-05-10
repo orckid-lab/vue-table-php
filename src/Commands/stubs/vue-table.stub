@@ -56,4 +56,14 @@ class DummyClass extends VueTable
 		// implement Uploadable in the current class
 		// return UsersUpload::class;
 	}
+
+	/**
+	 * Define the logic to delete the table.
+	 *
+	 * @return boolean
+	 */
+	public function destroy()
+	{
+		//return DB::table('users')->delete();
+	}
 }
