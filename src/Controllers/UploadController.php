@@ -13,10 +13,9 @@ use OrckidLab\VueTable\VueTable;
 class UploadController extends Controller
 {
 	/**
-	 * @param Request $request
 	 * @return array
 	 */
-	public function store(Request $request)
+	public function store()
 	{
 		return VueTable::uploadWith()->handle();
 	}
