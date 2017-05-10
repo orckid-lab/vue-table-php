@@ -19,7 +19,15 @@ class VueTable
 	 */
 	public static function getInstance()
 	{
-		return app(decrypt(request()->offsetGet('target')));
+		$class_basename = request()->offsetGet('target');
+
+		$class = "App\VueTables\\$class_basename";
+
+		if(!class_exists($class)){
+			abort(500, "VueTable class does not exist.");
+		}
+
+		return app($class);
 	}
 
 	/**
@@ -29,6 +37,6 @@ class VueTable
 	 */
 	public static function uploadWith()
 	{
-		return self::getInstance()->handleUploadWith();
+		return self::getInstance()->handleUpload();
 	}
 }
