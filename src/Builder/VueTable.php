@@ -247,7 +247,12 @@ abstract class VueTable implements Arrayable, Jsonable, JsonSerializable
 		return $this->request->fullUrl();
 	}
 
-	public function handleUploadWith()
+	/**
+	 * Evaluate if class supports uploading.
+	 *
+	 * @return \Illuminate\Foundation\Application|mixed
+	 */
+	public function handleUpload()
 	{
 		if(
 			!(method_exists($this, 'uploadWith') && class_exists($this->uploadWith()))
@@ -256,6 +261,22 @@ abstract class VueTable implements Arrayable, Jsonable, JsonSerializable
 		}
 
 		return app($this->uploadWith());
+	}
+
+	/**
+	 * Evaluate if class supports deleting.
+	 *
+	 * @return \Illuminate\Foundation\Application|mixed
+	 */
+	public function handleDestroy()
+	{
+		if(
+			!(method_exists($this, 'destroy'))
+		){
+			abort(500, class_basename($this) . ' does not support deleting.');
+		}
+
+		return $this->destroy();
 	}
 
 	/**
@@ -293,7 +314,7 @@ abstract class VueTable implements Arrayable, Jsonable, JsonSerializable
 			'showing' => $this->showing(),
 			'title' => $this->getTitle(),
 			'ajax' => [
-				'target' => encrypt(get_class($this)),
+				'target' => class_basename($this),
 				'url' => $this->currentPath(),
 			]
 		], $this->results->toArray());
@@ -339,11 +360,4 @@ abstract class VueTable implements Arrayable, Jsonable, JsonSerializable
 	 * @return Builder
 	 */
 	abstract public function query();
-
-	/**
-	 * Define the logic to delete the table.
-	 *
-	 * @return boolean
-	 */
-	abstract public function destroy();
 }
