@@ -1,0 +1,22 @@
+<?php
+
+namespace DummyNamespace;
+
+use Illuminate\Support\Facades\DB;
+
+/**
+ * Class DummyClass
+ * @package DummyNamespace
+ */
+class DummyClass
+{
+	/**
+	 * Define the logic to destroy the table.
+	 *
+	 * @return array
+	 */
+	public function fire()
+	{
+		//return DB::table('users')->delete();
+	}
+}
