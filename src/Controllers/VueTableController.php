@@ -26,10 +26,22 @@ class VueTableController extends Controller
 	}
 
 	/**
-	 * @return bool
+	 * Triggers the handler for uploading to the table.
+	 *
+	 * @return array
+	 */
+	public function upload()
+	{
+		return VueTable::uploadWith()->fire();
+	}
+
+	/**
+	 * Triggers the handler for destroying the table.
+	 *
+	 * @return array
 	 */
 	public function destroy()
 	{
-		return VueTable::getInstance()->handleDestroy();
+		return VueTable::destroyWith()->fire();
 	}
 }
