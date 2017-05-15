@@ -2,8 +2,8 @@
 
 namespace OrckidLab\VueTable;
 
-use Illuminate\Http\Request;
 use OrckidLab\VueTable\Builder\VueTable as VueTableBuilder;
+use OrckidLab\VueTable\Process\Destroy;
 use OrckidLab\VueTable\Process\Upload;
 
 /**
@@ -38,5 +38,15 @@ class VueTable
 	public static function uploadWith()
 	{
 		return self::getInstance()->handleUpload();
+	}
+
+	/**
+	 * Return an instance of Destroy.
+	 *
+	 * @return Destroy
+	 */
+	public static function destroyWith()
+	{
+		return self::getInstance()->handleDestroy();
 	}
 }
