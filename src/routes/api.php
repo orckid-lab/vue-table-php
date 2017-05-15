@@ -12,5 +12,5 @@ Route::prefix('api')
 
 		Route::post('vue-table/download', 'DownloadController@store');
 
-		Route::post('vue-table/upload', 'UploadController@store');
+		Route::post('vue-table/upload', 'VueTableController@upload');
 	});
