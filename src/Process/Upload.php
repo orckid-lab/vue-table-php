@@ -11,7 +11,7 @@ use OrckidLab\VueTable\VueTable;
  * Class Uploader
  * @package OrckidLab\VueTable\Process
  */
-abstract class Upload
+abstract class Upload implements ProcessInterface
 {
 	/**
 	 * @var Request
@@ -77,7 +77,7 @@ abstract class Upload
 	 *
 	 * @return array
 	 */
-	public function handle()
+	public function fire()
 	{
 		$index = $this->request->has('next') ? $this->request->next : 0;
 
