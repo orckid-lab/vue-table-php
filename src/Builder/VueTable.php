@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\UrlWindow;
 use JsonSerializable;
+use OrckidLab\VueTable\Process\Destroy;
 
 /**
  * Class Table
@@ -242,6 +243,22 @@ abstract class VueTable implements Arrayable, Jsonable, JsonSerializable
 	}
 
 	/**
+	 * @return bool
+	 */
+	protected function supportsUpload()
+	{
+		return method_exists($this, 'uploadWith') && class_exists($this->uploadWith());
+	}
+
+	/**
+	 * @return bool
+	 */
+	protected function supportsDestroy()
+	{
+		return method_exists($this, 'destroyWith') && class_exists($this->destroyWith());
+	}
+
+	/**
 	 * @return $this
 	 */
 	public function disablePaging()
@@ -273,7 +290,7 @@ abstract class VueTable implements Arrayable, Jsonable, JsonSerializable
 	public function handleUpload()
 	{
 		if(
-			!(method_exists($this, 'uploadWith') && class_exists($this->uploadWith()))
+			!($this->supportsUpload())
 		){
 			abort(500, class_basename($this) . ' does not support upload.');
 		}
@@ -284,17 +301,17 @@ abstract class VueTable implements Arrayable, Jsonable, JsonSerializable
 	/**
 	 * Evaluate if class supports deleting.
 	 *
-	 * @return \Illuminate\Foundation\Application|mixed
+	 * @return Destroy
 	 */
 	public function handleDestroy()
 	{
 		if(
-			!(method_exists($this, 'destroy'))
+			!($this->supportsDestroy())
 		){
 			abort(500, class_basename($this) . ' does not support deleting.');
 		}
 
-		return $this->destroy();
+		return app($this->destroyWith());
 	}
 
 	/**
@@ -334,6 +351,11 @@ abstract class VueTable implements Arrayable, Jsonable, JsonSerializable
 			'ajax' => [
 				'target' => class_basename($this),
 				'url' => $this->currentPath(),
+			],
+			'supports' => [
+				'upload' => $this->supportsUpload(),
+				'download' => false,
+				'destroy' => $this->supportsDestroy(),
 			]
 		], $this->results->toArray());
 	}
