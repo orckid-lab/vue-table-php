@@ -8,7 +8,7 @@ use OrckidLab\VueTable\Builder\VueTable;
 
 /**
  * Class DummyClass
- * @package OrckidLab\VueTable
+ * @package DummyNamespace
  */
 class DummyClass extends VueTable
 {

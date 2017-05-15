@@ -6,7 +6,7 @@ use OrckidLab\VueTable\Process\Upload;
 
 /**
  * Class DummyClass
- * @package App\VueTables\Uploads
+ * @package DummyNamespace
  */
 class DummyClass extends Upload
 {
