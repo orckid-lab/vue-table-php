@@ -97,6 +97,8 @@ abstract class VueTable implements Arrayable, Jsonable, JsonSerializable
 	}
 
 	/**
+	 * Add and map a column to the table.
+	 *
 	 * @param string $label
 	 * @param null $column
 	 * @param null $callback
@@ -114,6 +116,8 @@ abstract class VueTable implements Arrayable, Jsonable, JsonSerializable
 	}
 
 	/**
+	 * Initiate a query.
+	 *
 	 * @return $this
 	 */
 	public function newQuery()
@@ -130,6 +134,8 @@ abstract class VueTable implements Arrayable, Jsonable, JsonSerializable
 	}
 
 	/**
+	 * Returns the pagination.
+	 *
 	 * @return array
 	 */
 	public function pagination()
@@ -146,6 +152,8 @@ abstract class VueTable implements Arrayable, Jsonable, JsonSerializable
 	}
 
 	/**
+	 * Define the page number to start at.
+	 *
 	 * @param $page
 	 * @return $this
 	 */
@@ -157,6 +165,8 @@ abstract class VueTable implements Arrayable, Jsonable, JsonSerializable
 	}
 
 	/**
+	 * Set the title of the table.
+	 *
 	 * @param $title
 	 * @return $this
 	 */
@@ -168,6 +178,8 @@ abstract class VueTable implements Arrayable, Jsonable, JsonSerializable
 	}
 
 	/**
+	 * Get the title.
+	 *
 	 * @return mixed
 	 */
 	protected function getTitle()
@@ -176,6 +188,8 @@ abstract class VueTable implements Arrayable, Jsonable, JsonSerializable
 	}
 
 	/**
+	 * The current amount of record being shown.
+	 *
 	 * @return int
 	 */
 	protected function showing()
@@ -188,6 +202,8 @@ abstract class VueTable implements Arrayable, Jsonable, JsonSerializable
 	}
 
 	/**
+	 * Get the total amount of records.
+	 *
 	 * @return int
 	 */
 	protected function total()
@@ -196,6 +212,8 @@ abstract class VueTable implements Arrayable, Jsonable, JsonSerializable
 	}
 
 	/**
+	 * Get the current path.
+	 *
 	 * @return string
 	 */
 	protected function currentPath(){
@@ -208,7 +226,6 @@ abstract class VueTable implements Arrayable, Jsonable, JsonSerializable
 
 	/**
 	 * Populate the labels array.
-	 *
 	 */
 	protected function generateLabels()
 	{
@@ -221,7 +238,6 @@ abstract class VueTable implements Arrayable, Jsonable, JsonSerializable
 
 	/**
 	 * Refactor the rows to map with the available labels.
-	 *
 	 */
 	protected function generateRows()
 	{
@@ -243,6 +259,8 @@ abstract class VueTable implements Arrayable, Jsonable, JsonSerializable
 	}
 
 	/**
+	 *
+	 *
 	 * @return bool
 	 */
 	protected function supportsUpload()
@@ -251,6 +269,8 @@ abstract class VueTable implements Arrayable, Jsonable, JsonSerializable
 	}
 
 	/**
+	 *
+	 *
 	 * @return bool
 	 */
 	protected function supportsDestroy()
@@ -259,6 +279,8 @@ abstract class VueTable implements Arrayable, Jsonable, JsonSerializable
 	}
 
 	/**
+	 * Disable pagination.
+	 *
 	 * @return $this
 	 */
 	public function disablePaging()
@@ -269,6 +291,8 @@ abstract class VueTable implements Arrayable, Jsonable, JsonSerializable
 	}
 
 	/**
+	 * Run a callback if the condition evaluates to true.
+	 *
 	 * @param $condition
 	 * @param $callback
 	 * @return $this
@@ -356,7 +380,7 @@ abstract class VueTable implements Arrayable, Jsonable, JsonSerializable
 				'upload' => $this->supportsUpload(),
 				'download' => false,
 				'destroy' => $this->supportsDestroy(),
-			]
+			],
 		], $this->results->toArray());
 	}
 
