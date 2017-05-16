@@ -2,13 +2,13 @@
 
 namespace DummyNamespace;
 
-use Illuminate\Support\Facades\DB;
+use OrckidLab\VueTable\Process\Destroy;
 
 /**
  * Class DummyClass
  * @package DummyNamespace
  */
-class DummyClass
+class DummyClass extends Destroy
 {
 	/**
 	 * Define the logic to destroy the table.
@@ -17,6 +17,6 @@ class DummyClass
 	 */
 	public function fire()
 	{
-		//return DB::table('users')->delete();
+		//return $this->deleteAll('users');
 	}
 }
